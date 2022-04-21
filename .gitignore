@@ -1,0 +1,11 @@
+.DS_Store
+venv
+.idea
+__pycache__
+*.bat
+docker-compose*.yml
+.env
+tmp
+*.log
+.cache
+
