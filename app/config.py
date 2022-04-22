@@ -5,6 +5,6 @@ load_dotenv(find_dotenv())
 
 
 def get_version():
-    return "v1.0.0"
+    return "v0.0.1"
 
 
