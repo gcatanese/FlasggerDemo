@@ -1,4 +1,4 @@
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify, make_response
 from random import randint
 
 import logging
@@ -63,7 +63,7 @@ def markdown_demo():
 def get_tree(id):
     """
     Gets a Tree 🌳
-    GET endpoint with path and query parameters
+    GET endpoint with path parameter
     ---
     security:
         - bearerAuth: []
@@ -89,13 +89,6 @@ def get_tree(id):
           required: true
           description: ID of the tree
           example: 1
-        - in: query
-          name: extended
-          schema:
-            type: boolean
-          required: false
-          description: Boolean parameter, when true fetch all attributes
-          example: true
     responses:
       200:
         description: returns a Tree
@@ -118,12 +111,224 @@ def get_tree(id):
                   max_height: 15m
                   endangered: True
     """
-    extended = request.args.get('extended')
+    data = {"id": id, "name": "Dragon tree", "max_height": "15m", "endangered": True}
 
-    if extended:
-        data = {"id": 1, "name": "Dragon tree", "max_height": "15m", "endangered": True}
-    else:
-        data = {"id": 1, "name": "Dragon tree", "max_height": "15m"}
+    return jsonify(data)
+
+
+@api_blueprint.route('/treeQueryParam')
+def get_tree_query_parameter():
+    """
+    Gets a Tree 🌳
+    GET endpoint with query parameter
+    ---
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    definitions:
+      Tree:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          max_height:
+            type: integer
+          endangered:
+            type: boolean
+    parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the tree
+          example: 10
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tree'
+            examples:
+              Dragon tree example:
+                summary: returns Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+    """
+    # get query parameter
+    id = request.args.get('id')
+
+    data = {"id": id, "name": "Dragon tree", "max_height": "15m", "endangered": True}
+
+    return jsonify(data)
+
+
+@api_blueprint.route('/treeHeaderParam')
+def get_tree_header_parameter():
+    """
+    Gets a Tree 🌳
+    GET endpoint with header parameter
+    ---
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    definitions:
+      Tree:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          max_height:
+            type: integer
+          endangered:
+            type: boolean
+    parameters:
+        - in: header
+          name: X-Tree-ID
+          schema:
+            type: string
+          required: true
+          description: ID of the tree
+          example: 1
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tree'
+            examples:
+              Dragon tree example:
+                summary: returns Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+    """
+    # get query parameter
+    id = request.headers.get('X-Request-ID')
+
+    data = {"id": id, "name": "Dragon tree", "max_height": "15m", "endangered": True}
+
+    return jsonify(data)
+
+
+@api_blueprint.route('/treeEnumParam')
+def get_tree_enum_parameter():
+    """
+    Gets a Tree 🌳
+    GET endpoint with query parameter restricted to a fixed set of values (enum)
+    ---
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    definitions:
+      Tree:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          max_height:
+            type: integer
+          endangered:
+            type: boolean
+    parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+            default: 1
+            enum:
+              - 1
+              - 2
+              - 3
+          required: false
+          description: ID of the tree
+          example: 1
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tree'
+            examples:
+              Dragon tree example:
+                summary: returns Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+    """
+    # get query parameter
+    id = request.args.get('id')
+
+    data = {"id": id, "name": "Dragon tree", "max_height": "15m", "endangered": True}
+
+    return jsonify(data)
+
+
+@api_blueprint.route('/treeCookieParam')
+def get_tree_cookie_parameter():
+    """
+    Gets a Tree 🌳
+    GET endpoint with cookie parameter
+    ---
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    definitions:
+      Tree:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          max_height:
+            type: integer
+          endangered:
+            type: boolean
+    parameters:
+        - in: cookie
+          name: tree-id
+          schema:
+            type: string
+          required: true
+          description: ID of the tree
+          example: 1
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tree'
+            examples:
+              Dragon tree example:
+                summary: returns Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+    """
+    # get cookie (note: cookie must be set by the application)
+    id = request.cookies.get('tree-id')
+
+    data = {"id": 1, "name": "Dragon tree", "max_height": "15m", "endangered": True}
 
     return jsonify(data)
 
