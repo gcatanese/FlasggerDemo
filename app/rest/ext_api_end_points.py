@@ -10,9 +10,11 @@ api_blueprint = Blueprint('api_blueprint', __name__)
 def get_version():
     """
     Returns the API version
-    GET endpoint with no parameters and no security.
+    GET endpoint with no parameters and **no security**.
     ---
     security: [] # No security
+    tags:
+        - get (no security)
     responses:
       200:
         description: returns API version
@@ -22,7 +24,39 @@ def get_version():
                 type: string
                 example: v.1.0.0
     """
-    return "1.0"
+    return "v1"
+
+
+@api_blueprint.route('/markdown')
+def markdown_demo():
+    """
+    Returns a message
+    GET endpoint with markdown documentation
+
+    tier 1 header
+    # tier 5 header
+
+    A **GET** endpoint to document usage of __markdown__
+    Use of *italic*  is also  _possible_
+
+    Check out the [markdown guide](https://www.markdownguide.org/basic-syntax/)
+
+    show small bits of code with backticks: `print("hello world")`
+
+    ---
+    security: [] # No security
+    tags:
+        - get (no security)
+    responses:
+      200:
+        description: ok
+        content:
+            text/plain:
+              schema:
+                type: string
+                example: ok
+    """
+    return "ok"
 
 
 @api_blueprint.route('/tree/<id>')
@@ -33,6 +67,8 @@ def get_tree(id):
     ---
     security:
         - bearerAuth: []
+    tags:
+        - get
     definitions:
       Tree:
         type: object
@@ -92,6 +128,69 @@ def get_tree(id):
     return jsonify(data)
 
 
+@api_blueprint.route('/tree/<name>')
+def get_tree_by_name(name):
+    """
+    Gets a Tree 🌳 by name
+    GET endpoint no longer supported
+    ---
+    deprecated: true
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    definitions:
+      Tree:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          max_height:
+            type: integer
+          endangered:
+            type: boolean
+    parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the tree
+          example: Dragon tree
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tree'
+            examples:
+              Dragon tree example:
+                summary: returns Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+              Dragon tree extended version example:
+                summary: returns extended Dragon tree
+                value:
+                  id: 1
+                  name: Dragon tree
+                  max_height: 15m
+                  endangered: True
+    """
+    extended = request.args.get('extended')
+
+    if extended:
+        data = {"id": 1, "name": "Dragon tree", "max_height": "15m", "endangered": True}
+    else:
+        data = {"id": 1, "name": "Dragon tree", "max_height": "15m"}
+
+    return jsonify(data)
+
+
 @api_blueprint.route('/trees')
 def get_trees():
     """
@@ -100,30 +199,27 @@ def get_trees():
     ---
     security:
         - bearerAuth: []
-    parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: ID of the entity
-          example: 100
-        - in: query
-          name: extended
-          schema:
-            type: boolean
-          required: false
-          description: Boolean parameter, when true fetch all attributes
-          example: true
+    tags:
+        - get
     responses:
       200:
-        description: returns API version
+        description: returns list of Trees
         content:
           text/plain:
             schema:
-              $ref: '#/definitions/Tree'
+              type: array
+              items:
+                $ref: '#/definitions/Tree'
             examples:
-              - {"id": 1, "name": "Dragon tree", "max_height": "15m"}
+              list example:
+                summary: returns array of trees
+                value:
+                  - id: 1
+                    name: Dragon tree
+                    max_height: 15m
+                  - id: 2
+                    name: Giant sequoia
+                    max_height: 8m
     """
     data = {
         "trees": [
@@ -143,6 +239,8 @@ def create_tree():
     ---
     security:
         - bearerAuth: []
+    tags:
+        - post
     requestBody:
         description: JSON payload with the card attributes
         required: true
@@ -182,6 +280,8 @@ def random():
     ---
     security:
       - bearerAuth: []
+    tags:
+        - get
     responses:
       200:
         description: returns a random number
