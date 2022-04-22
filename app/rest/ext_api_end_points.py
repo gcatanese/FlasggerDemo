@@ -120,7 +120,7 @@ def get_tree(id):
 def get_tree_query_parameter():
     """
     Gets a Tree 🌳
-    GET endpoint with query parameter
+    GET endpoint with query parameter and deprecation of another parameter
     ---
     security:
         - bearerAuth: []
@@ -145,6 +145,14 @@ def get_tree_query_parameter():
             type: integer
           required: true
           description: ID of the tree
+          example: 10
+        - in: query
+          name: identifier
+          schema:
+            type: integer
+          deprecated: true
+          required: false
+          description: Identifier of the tree (deprecated)
           example: 10
     responses:
       200:
