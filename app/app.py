@@ -17,6 +17,7 @@ def create_app():
 
         swagger = Swagger(web_app, config=swagger_config)
 
+
         ascii_banner = pyfiglet.figlet_format("Tweesky")
         print(ascii_banner, flush=True)
 
@@ -60,10 +61,15 @@ swagger_config = {
             "model_filter": lambda tag: True,  # all in
         }
     ],
+    "tags": [
+        {"name": "get (no security)"},
+        {"name": "get"},
+        {"name": "post"}
+    ],
     "title": "OpenAPI Sample with Flasgger (Python)",
     "description": "Sample application showing OpenAPI configuration ",
     "version": get_version(),
-    "termsOfService": "https://github.com/gcatanese/S3-Simple-Browser/blob/main/README.md",
+    "termsOfService": "https://github.com/gcatanese/FlasggerDemo",
     "static_url_path": "/characteristics/static",
     "swagger_ui": True,
     #"specs_route": "/apidocs",
