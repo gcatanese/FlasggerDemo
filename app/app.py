@@ -40,6 +40,19 @@ def get_port():
 swagger_config = {
     "headers": [],
     "openapi": "3.0.2",
+    "info": {
+        "title": "OpenAPI Sample with Flasgger (Python)",
+        "description": "Sample application showing OpenAPI configuration ",
+        "contact": {
+            "name": "Beppe Catanese",
+            "url": "https://github.com/gcatanese"
+        },
+        "license": {
+            "name": "Apache-2.0 License",
+            "url": "https://github.com/gcatanese/FlasggerDemo/blob/main/LICENSE"
+        },
+        "version": get_version()
+    },
     "components": {
         "securitySchemes": {
             "bearerAuth": {
@@ -66,9 +79,6 @@ swagger_config = {
         {"name": "get"},
         {"name": "post"}
     ],
-    "title": "OpenAPI Sample with Flasgger (Python)",
-    "description": "Sample application showing OpenAPI configuration ",
-    "version": get_version(),
     "termsOfService": "https://github.com/gcatanese/FlasggerDemo",
     "static_url_path": "/characteristics/static",
     "swagger_ui": True,
