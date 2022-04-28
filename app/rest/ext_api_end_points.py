@@ -528,6 +528,48 @@ def random():
     return randint(0, 1000)
 
 
+@api_blueprint.route('/flower/<id>')
+def get_flower(id):
+    """
+    Gets a Flower 🌻
+    GET endpoint with inline object (defined as part of the response)
+    ---
+    security:
+        - bearerAuth: []
+    tags:
+        - get
+    parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the flower
+          example: 1
+    responses:
+      200:
+        description: returns a Tree
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+            examples:
+              Sunflower example:
+                summary: returns Sunflower
+                value:
+                  id: 1
+                  name: Sunflower
+    """
+    data = {"id": id, "name": "Sunflower"}
+
+    return jsonify(data)
+
+
 def validate_api_token(request):
     """
     Validate token in API calls
